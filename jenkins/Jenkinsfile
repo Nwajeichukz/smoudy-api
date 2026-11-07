@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Pulling code from GitHub...'
+                git branch: 'dev', url: 'https://github.com/Nwajeichukz/smoudy-api.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the Spring Boot app...'
+                sh 'chmod +x ./mvnw'
+                sh './mvnw clean package -DskipTests'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh './mvnw test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying via Docker Compose...'
+                // Assuming you have a docker-compose.yml in the root of your project for the app
+                sh 'docker compose down || true'
+                sh 'docker compose up -d --build'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline succeeded! 🎉'
+        }
+        failure {
+            echo 'Pipeline failed! ❌'
+        }
+    }
+}
