@@ -5,7 +5,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Pulling code from GitHub...'
-                git branch: 'dev', url: 'https://github.com/Nwajeichukz/smoudy-api.git'
             }
         }
 
