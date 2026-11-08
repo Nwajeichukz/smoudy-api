@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Pulling code from GitHub...'
-            }
-        }
-
         stage('Build') {
             steps {
                 echo 'Building the Spring Boot app...'
@@ -24,14 +18,16 @@ pipeline {
         }
 
         stage('Deploy') {
+            when {
+                not { changeRequest() }
+                branch 'dev' // Only deploy if it's the dev branch
+            }
             steps {
-                echo 'Deploying via Docker Compose...'
-                // Assuming you have a docker-compose.yml in the root of your project for the app
-                sh 'docker compose down || true'
-                sh 'docker compose up -d --build'
+                echo 'Deploying to DEV environment...'
+                sh 'docker compose -p smoudy-dev down --remove-orphans || true'
+                sh 'docker compose -p smoudy-dev up -d --build'
             }
         }
-    }
 
     post {
         always {
