@@ -28,6 +28,7 @@ pipeline {
                 sh 'docker compose -p smoudy-dev up -d --build'
             }
         }
+    }
 
     post {
         always {
