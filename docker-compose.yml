@@ -3,5 +3,4 @@ services:
     build: .
     ports:
       - "8081:8081"
-    container_name: smoudy-app
     restart: unless-stopped

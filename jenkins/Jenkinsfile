@@ -24,7 +24,11 @@ pipeline {
             }
             steps {
                 echo 'Deploying to DEV environment...'
+
+                // 1. Cleanly tear down the specific project's networks/volumes
                 sh 'docker compose -p smoudy-dev down --remove-orphans || true'
+
+                // 2. Start the new container
                 sh 'docker compose -p smoudy-dev up -d --build'
             }
         }
